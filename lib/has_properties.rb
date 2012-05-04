@@ -14,7 +14,7 @@ module HasProperties
     @@property_template_name ||= options[:property_template_name]
     @@property_name ||= options[:property_name]
     
-    has_many :properties, class_name: property_template_klass.singularize,
+    has_many :properties, class_name: property_klass.name,
                           foreign_key: property_template_id
   end
 
