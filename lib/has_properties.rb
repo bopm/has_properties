@@ -7,7 +7,7 @@ require 'has_properties/version'
 module HasProperties
   # Property name
   mattr_accessor :property_template_name
-  @@property_template_name = ''
+  @@property_template_name = 'property_template'
   # Property value name
   mattr_accessor :property_name
   @@property_name = ''

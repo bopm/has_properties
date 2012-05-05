@@ -25,4 +25,8 @@ class Test::Unit::TestCase
   def assert_has_many(model, other)
     assert_association(model, :has_many, other)
   end
+  
+  def assert_association(model, type, other)
+    assert model.reflect_on_all_associations(type).any? { |a| a.name.to_s == other.to_s }
+  end
 end

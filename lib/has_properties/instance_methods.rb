@@ -20,7 +20,7 @@ module HasProperties
       end
 
       def safe_property_id(method)
-        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.property_template_name)}_\n+/
+        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.property_template_name)}_/
         id = method.to_s.split('_').second.to_i
         id.in? allowed_properites.map(&:id) ? property_template_klass.find_by_id(id) : nil
       end
@@ -48,7 +48,7 @@ module HasProperties
       end
       
       def properties_name_list
-        allowed_metrics.map {|m| "#{@@property_tempate_name}_#{m.id}" }
+        allowed_metrics.map {|m| "#{HasProperties.property_tempate_name}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
