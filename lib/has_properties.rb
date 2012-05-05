@@ -15,7 +15,8 @@ module HasProperties
     @@property_name ||= options[:property_name]
     
     has_many :properties, class_name: property_klass.name,
-                          foreign_key: property_template_id
+                          foreign_key: property_klass.name.foreign_key,
+                          dependent: :destroy
   end
 
   include HasProperties::InstanceMethods
