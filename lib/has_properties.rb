@@ -1,18 +1,17 @@
 require 'has_properties/version'
 require 'has_properties/instance_methods'
+require 'active_support/concern'
+require 'active_record'
 
 module HasProperties
-  # Property name
-  mattr_accessor :property_template_name
-  @@property_template_name = 'property_template'
-
-  # Property value name
-  mattr_accessor :property_name
-  @@property_name = 'property'
-
   def has_properties(options = {})
-    @@property_template_name ||= options[:property_template_name]
-    @@property_name ||= options[:property_name]
+    # Property name
+    cattr_accessor :property_template_name
+    self.property_template_name = options[:property_template_name] || 'property_template'
+
+    # Property value name
+    cattr_accessor :property_name
+    self.property_name = options[:property_name] || 'property'
     
     has_many :properties, class_name: property_klass.name,
                           foreign_key: property_klass.name.foreign_key,

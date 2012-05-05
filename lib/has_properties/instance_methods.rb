@@ -1,7 +1,7 @@
 module HasProperties
   module InstanceMethods
     extend ActiveSupport::Concern
-    
+
     def respond_to?(method, include_private=false)
       if safe_property_id(method).nil?
         super
@@ -12,15 +12,15 @@ module HasProperties
 
     private
       def property_template_klass
-        @@property_template_name.constantize
+        self.property_template_name.constantize
       end
       
       def property_klass
-        @@property_name.constantize
+        self.property_name.constantize
       end
 
       def safe_property_id(method)
-        return nil unless method.to_s =~ /^#{Regexp.quote(@@property_template_name)}_\n+/
+        return nil unless method.to_s =~ /^#{Regexp.quote(self.property_template_name)}_\n+/
         id = method.to_s.split('_').second.to_i
         id.in? allowed_properites.map(&:id) ? property_template_klass.find_by_id(id) : nil
       end
@@ -48,12 +48,12 @@ module HasProperties
       end
       
       def properties_name_list
-        allowed_metrics.map {|m| "#{@@property_tempate_name}_#{m.id}" }
+        allowed_metrics.map {|m| "#{self.property_tempate_name}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
         attrs = super
-        attrs += (self.metrics_name_list || []) unless self.new_record?
+        attrs += (self.properties_name_list || []) unless self.new_record?
         attrs
       end
   end
