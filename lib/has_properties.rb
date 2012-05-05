@@ -1,7 +1,7 @@
-require 'has_properties/version'
-require 'has_properties/instance_methods'
 require 'active_support/concern'
 require 'active_record'
+require 'has_properties/instance_methods'
+require 'has_properties/version'
 
 module HasProperties
   def has_properties(options = {})

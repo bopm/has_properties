@@ -18,4 +18,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'rails', '~> 3.2.3'
   
   gem.add_development_dependency 'sqlite3'
+  gem.add_development_dependency 'database_cleaner', '0.5.2'
+  gem.add_development_dependency 'test_declarative'
 end
