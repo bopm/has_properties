@@ -1,6 +1,9 @@
 require 'test/unit'
 require 'has_properties'
 require 'database_cleaner'
+require 'active_support'
+require 'active_record'
+require 'sqlite3'
 
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 

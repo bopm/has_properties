@@ -12,15 +12,15 @@ module HasProperties
 
     private
       def property_template_klass
-        self.property_template_name.constantize
+        HasProperties.property_template_name.constantize
       end
       
       def property_klass
-        self.property_name.constantize
+        HasProperties.property_name.constantize
       end
 
       def safe_property_id(method)
-        return nil unless method.to_s =~ /^#{Regexp.quote(self.property_template_name)}_\n+/
+        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.property_template_name)}_\n+/
         id = method.to_s.split('_').second.to_i
         id.in? allowed_properites.map(&:id) ? property_template_klass.find_by_id(id) : nil
       end
@@ -32,7 +32,7 @@ module HasProperties
 
       def method_missing(method, *args)
         super if (property = safe_property_id(method)).nil?
-        property = self.competences.find_or_initialize_by_property_id(property.id)
+        property = self.properties.find_or_initialize_by_property_id(property.id)
         #FIXME: additional where and additional steps of yak shaving needed
         if method.to_s =~ /(.+)=$/
           # setter
@@ -48,7 +48,7 @@ module HasProperties
       end
       
       def properties_name_list
-        allowed_metrics.map {|m| "#{self.property_tempate_name}_#{m.id}" }
+        allowed_metrics.map {|m| "#{@@property_tempate_name}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
