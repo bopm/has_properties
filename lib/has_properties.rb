@@ -7,10 +7,10 @@ require 'has_properties/version'
 module HasProperties
   # Property name
   mattr_accessor :property_template_name
-  @@property_template_name = 'property_template'
+  @@property_template_name = ''
   # Property value name
   mattr_accessor :property_name
-  @@property_name = 'property'
+  @@property_name = ''
 
   def has_properties(options = {})
     @@property_template_name ||= options[:property_template_name]

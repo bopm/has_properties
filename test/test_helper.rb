@@ -1,6 +1,7 @@
 require 'test/unit'
 require 'has_properties'
 require 'database_cleaner'
+require 'test_declarative'
 require 'active_support'
 require 'active_record'
 require 'sqlite3'
