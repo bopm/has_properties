@@ -1,5 +1,3 @@
-require 'rubygems'
-require 'bundler/setup'
 require 'test/unit'
 require 'fileutils'
 require 'logger'
@@ -13,9 +11,6 @@ FileUtils.touch(log) unless File.exists?(log)
 ActiveRecord::Base.logger = Logger.new(log)
 ActiveRecord::LogSubscriber.attach_to(:active_record)
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
-
-$:.unshift File.expand_path('../../lib', __FILE__)
-require 'has_properties'
 
 require File.expand_path('../data/schema', __FILE__)
 require File.expand_path('../data/models', __FILE__)
