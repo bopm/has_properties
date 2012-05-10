@@ -1,7 +1,7 @@
 module HasProperties
   module InstanceMethods
     extend ActiveSupport::Concern
-
+    
     def respond_to?(method, include_private=false)
       if safe_property_id(method).nil?
         super
@@ -11,25 +11,17 @@ module HasProperties
     end
 
     private
-      def property_template_klass
-        HasProperties.property_template_name.constantize
-      end
-      
-      def property_klass
-        HasProperties.property_name.constantize
-      end
-
       def safe_property_id(method)
         puts method
-        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.property_template_name)}_/
+        return nil unless method.to_s =~ /^#{Regexp.quote(options[:template])}_/
         id = method.to_s.split('_').second.to_i
         puts allowed_properites.map(&:id).inspect
-        id.in? allowed_properites.map(&:id) ? property_template_klass.find_by_id(id) : nil
+        id.in? allowed_properites.map(&:id) ? options[:template].constantize.find_by_id(id) : nil
       end
 
       def allowed_properties
         #FIXME: additional filters needed
-        property_template_klass.all
+       options[:tempate].constantize.all
       end
 
       def method_missing(method, *args)
@@ -38,7 +30,7 @@ module HasProperties
         #FIXME: additional where and additional steps of yak shaving needed
         if method.to_s =~ /(.+)=$/
           # setter
-          if property_template_klass.actual?(args.first)
+          if options[:tempate].constantize.actual?(args.first)
             property.update_attribute(:value, args.first)
           else
             property.destroy
@@ -50,7 +42,7 @@ module HasProperties
       end
       
       def properties_name_list
-        allowed_metrics.map {|m| "#{HasProperties.property_tempate_name}_#{m.id}" }
+        allowed_metrics.map {|m| "#{options[:template]}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
