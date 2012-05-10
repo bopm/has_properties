@@ -20,11 +20,11 @@ class HasPropertiesTest < Test::Unit::TestCase
 
   test "a propertized record must save property value in property table" do
     good = Good.create! :property_template_1 => '42'
-    assert_equal '42', Property.find_by_good_id_and_property_template_id(good.id,1).value
+    assert_equal '42', good.properties.find_by_property_template_id(1).value
   end
   
   test "template may be set to different model" do
     item = Item.create! :template_1 => '42'
-    assert_equal '42', Prop.find_by_item_id_and_template_id(item.id,1).value
+    assert_equal '42', item.properties.find_by_template_id(1).value
   end
 end
