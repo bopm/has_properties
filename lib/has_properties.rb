@@ -12,8 +12,8 @@ module HasProperties
   
   def has_properties(*name_options)
     @@options = name_options.extract_options!
-    @@options[:property] = name_options.first.to_s.capitalize
-    @@options[:template] ||= "#{@@options[:property]}_template"
+    @@options[:property] = name_options.first.to_s.camelize
+    @@options[:template] ||= "#{@@options[:property]}_template".camelize
     @@options[:property_class] ||= @@options[:property].constantize.name
     @@options[:property_fk] ||= @@options[:property_class].foreign_key
     

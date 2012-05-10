@@ -13,7 +13,8 @@ module HasProperties
     private
       def safe_property_id(method)
         puts method
-        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.options[:template])}_/
+        puts HasProperties.options.inspect
+        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.options[:template].underscore)}_/
         id = method.to_s.split('_').second.to_i
         puts allowed_properites.map(&:id).inspect
         id.in? allowed_properites.map(&:id) ? HasProperties.options[:template].constantize.find_by_id(id) : nil
