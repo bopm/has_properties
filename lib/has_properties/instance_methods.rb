@@ -13,15 +13,15 @@ module HasProperties
     private
       def safe_property_id(method)
         puts method
-        return nil unless method.to_s =~ /^#{Regexp.quote(options[:template])}_/
+        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.options[:template])}_/
         id = method.to_s.split('_').second.to_i
         puts allowed_properites.map(&:id).inspect
-        id.in? allowed_properites.map(&:id) ? options[:template].constantize.find_by_id(id) : nil
+        id.in? allowed_properites.map(&:id) ? HasProperties.options[:template].constantize.find_by_id(id) : nil
       end
 
       def allowed_properties
         #FIXME: additional filters needed
-       options[:tempate].constantize.all
+       HasProperties.options[:tempate].constantize.all
       end
 
       def method_missing(method, *args)
@@ -30,7 +30,7 @@ module HasProperties
         #FIXME: additional where and additional steps of yak shaving needed
         if method.to_s =~ /(.+)=$/
           # setter
-          if options[:tempate].constantize.actual?(args.first)
+          if HasProperties.options[:tempate].constantize.actual?(args.first)
             property.update_attribute(:value, args.first)
           else
             property.destroy
@@ -42,7 +42,7 @@ module HasProperties
       end
       
       def properties_name_list
-        allowed_metrics.map {|m| "#{options[:template]}_#{m.id}" }
+        allowed_metrics.map {|m| "#{HasProperties.options[:template]}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
