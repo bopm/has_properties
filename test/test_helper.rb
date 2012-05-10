@@ -11,12 +11,12 @@ ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':me
 require File.expand_path('../data/schema', __FILE__)
 require File.expand_path('../data/models', __FILE__)
 
-DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.strategy = :truncation, {:except => %w[property_templates]}
 
 class Test::Unit::TestCase
   def setup
+    PropertyTemplate.find_or_create_by_id_and_name(:id => 1, :name => 'test')
     DatabaseCleaner.start
-    PropertyTemplate.create :name => 'test'
   end
 
   def teardown

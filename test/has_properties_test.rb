@@ -14,10 +14,12 @@ class HasPropertiesTest < Test::Unit::TestCase
   
   test "a propertized record must support property getter/setter" do
     good = Good.create!
-    good.property_template_1 = 42
-    assert_equal 42, good.property_template_1
-    good.save
-    property = Property.find_by_good_id_and_property_id(1,1)
-    assert_equal 42, property.value
+    good.property_template_1 = '42'
+    assert_equal '42', good.property_template_1
+  end
+
+  test "a propertized record must save property value in property table" do
+    good = Good.create! :property_template_1 => '42'
+    assert_equal '42', Property.find_by_good_id_and_property_template_id(good.id,1).value
   end
 end

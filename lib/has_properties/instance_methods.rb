@@ -3,7 +3,7 @@ module HasProperties
     extend ActiveSupport::Concern
     
     def respond_to?(method, include_private=false)
-      if safe_property_id(method).nil?
+      if safe_template_id(method).nil?
         super
       else
         true
@@ -11,44 +11,40 @@ module HasProperties
     end
 
     private
-      def safe_property_id(method)
-        puts method
-        puts HasProperties.options.inspect
-        return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.options[:template].underscore)}_/
-        id = method.to_s.split('_').second.to_i
-        puts allowed_properites.map(&:id).inspect
-        id.in? allowed_properites.map(&:id) ? HasProperties.options[:template].constantize.find_by_id(id) : nil
+      def safe_template_id(method)
+        return nil unless (match = /^#{Regexp.quote(HasProperties.options[:template].underscore)}_(\d+)/.match(method))
+        HasProperties.options[:template].constantize.find_by_id(match[1]) if match[1].to_i.in?(allowed_properties.map(&:id))
       end
 
       def allowed_properties
         #FIXME: additional filters needed
-       HasProperties.options[:tempate].constantize.all
+        HasProperties.options[:template].constantize.all
       end
 
       def method_missing(method, *args)
-        super if (property = safe_property_id(method)).nil?
-        property = self.properties.find_or_initialize_by_property_id(property.id)
+        super if (template = safe_template_id(method)).nil?
+        property = self.properties.send "find_or_initialize_by_#{HasProperties.options[:template_fk]}".to_sym, template.id
         #FIXME: additional where and additional steps of yak shaving needed
         if method.to_s =~ /(.+)=$/
           # setter
-          if HasProperties.options[:tempate].constantize.actual?(args.first)
+          if HasProperties.options[:template].constantize.actual?(args.first)
             property.update_attribute(:value, args.first)
           else
             property.destroy
           end
         else
           # getter
-          property_value.try(:value)
+          property.try(:value)
         end
       end
       
-      def properties_name_list
-        allowed_metrics.map {|m| "#{HasProperties.options[:template]}_#{m.id}" }
+      def templates_name_list
+        allowed_properties.map {|m| "#{HasProperties.options[:template]}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
         attrs = super
-        attrs += (self.properties_name_list || []) unless self.new_record?
+        attrs += (self.templates_name_list || []) unless self.new_record?
         attrs
       end
   end
