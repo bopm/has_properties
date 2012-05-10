@@ -20,8 +20,10 @@ module HasProperties
       end
 
       def safe_property_id(method)
+        puts method
         return nil unless method.to_s =~ /^#{Regexp.quote(HasProperties.property_template_name)}_/
         id = method.to_s.split('_').second.to_i
+        puts allowed_properites.map(&:id).inspect
         id.in? allowed_properites.map(&:id) ? property_template_klass.find_by_id(id) : nil
       end
 

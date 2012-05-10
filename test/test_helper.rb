@@ -16,6 +16,7 @@ DatabaseCleaner.strategy = :truncation
 class Test::Unit::TestCase
   def setup
     DatabaseCleaner.start
+    PropertyTemplate.create :name => 'test'
   end
 
   def teardown
