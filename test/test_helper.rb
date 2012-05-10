@@ -16,6 +16,7 @@ DatabaseCleaner.strategy = :truncation, {:except => %w[property_templates, templ
 class Test::Unit::TestCase
   def setup
     PropertyTemplate.find_or_create_by_id_and_name(1,'test')
+    PropertyTemplate.find_or_create_by_id_and_name(2,'test#2')
     Template.find_or_create_by_id_and_name(1,'test')
     DatabaseCleaner.start
   end

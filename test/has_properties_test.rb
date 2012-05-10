@@ -19,8 +19,9 @@ class HasPropertiesTest < Test::Unit::TestCase
   end
 
   test "a propertized record must save property value in property table" do
-    good = Good.create! :property_template_1 => '42'
+    good = Good.create! :property_template_1 => '42', :property_template_2 => '22'
     assert_equal '42', good.properties.find_by_property_template_id(1).value
+    assert_equal '22', good.properties.find_by_property_template_id(2).value
   end
   
   test "template may be set to different model" do
