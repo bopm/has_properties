@@ -8,7 +8,7 @@ class Property < ActiveRecord::Base
 end
 
 class Good < ActiveRecord::Base
-  has_properties :property
+  has_properties :properties
 end
 
 class Template < ActiveRecord::Base
@@ -21,5 +21,5 @@ class Prop < ActiveRecord::Base
 end
 
 class Item < ActiveRecord::Base
-  has_properties :prop, :template => :template
+  has_properties :props, :template => :templates
 end
