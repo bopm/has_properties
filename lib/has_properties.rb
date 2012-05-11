@@ -14,11 +14,12 @@ module HasProperties
     self.options[:property_class] ||= self.options[:property].constantize.name
     self.options[:template] = ActiveSupport::Inflector.camelize(self.options[:template] || "#{self.options[:property]}_template").singularize
     self.options[:template_fk] ||= self.options[:template].constantize.name.foreign_key
-    
+    has_many_options = {class_name: self.options[:property_class], dependent: :destroy}
+    has_many_options[:through] = self.options[:through] if self.options[:through].is_a? Symbol
+
+    has_many :properties, has_many_options
+
     include HasProperties::InstanceMethods
-    
-    has_many :properties, class_name: self.options[:property_class],
-                          dependent: :destroy
   end
   
 end

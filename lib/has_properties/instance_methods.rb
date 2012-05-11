@@ -20,11 +20,22 @@ module HasProperties
         properties = options[:template].constantize.scoped
         (options[:template_scope].is_a?(Symbol) ? properties.public_send(options[:template_scope]) : properties).all
       end
+      
+      def find_or_initialize_call(template_id)
+        name = "find_or_initialize_by_#{options[:template_fk]}"
+        params = [template_id]
+        if options[:through].is_a? Symbol
+          fk = options[:through].to_s.foreign_key
+          name += "_and_#{self.class.name.foreign_key}_and_#{fk}"
+          params += [self.id, self.send(fk.to_sym)]
+        end
+        return name.to_sym, params
+      end
 
       def method_missing(method, *args)
         super if (template = safe_template_id(method)).nil?
-        property = self.properties.send(("find_or_initialize_by_#{options[:template_fk]}".to_sym), template.id)
-        #FIXME: additional where and additional steps of yak shaving needed
+        finder, params = find_or_initialize_call(template.id)
+        property = self.properties.send(finder, *params)
         if method.to_s =~ /(.+)=$/
           # setter
           if options[:template].constantize.actual?(args.first)

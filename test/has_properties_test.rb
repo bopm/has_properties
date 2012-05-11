@@ -36,4 +36,19 @@ class HasPropertiesTest < Test::Unit::TestCase
     assert_equal true, item.respond_to?(:scoped_template_1)
     assert_equal false, item.respond_to?(:scoped_template_2)
   end
+  
+  test "through for properties must be supported" do
+    assert_has_many(Part, :properties)
+    good = Good.create!
+    part = good.parts.create! :name => 'test'
+    assert_equal true, good.respond_to?(:property_template_1)
+  end
+  
+  test "through for properties must set source model id" do
+    good = Good.create!
+    part = good.parts.create! :name => 'test'
+    part.update_attribute(:property_template_1, '84')
+    assert_equal part.id, part.properties.find_by_property_template_id_and_good_id_and_value(1, good.id, '84').part_id
+  end
+  
 end

@@ -5,10 +5,18 @@ class PropertyTemplate < ActiveRecord::Base
 end
 
 class Property < ActiveRecord::Base
+  belongs_to :good
+  belongs_to :part
 end
 
 class Good < ActiveRecord::Base
+  has_many :parts
   has_properties :properties
+end
+
+class Part < ActiveRecord::Base
+  belongs_to :good
+  has_properties :properties, :through => :good
 end
 
 class Template < ActiveRecord::Base
@@ -38,3 +46,4 @@ end
 class ScopedItem < ActiveRecord::Base
   has_properties :scoped_properties, :template => :scoped_template, :template_scope => :scope_name
 end
+

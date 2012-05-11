@@ -5,6 +5,11 @@ ActiveRecord::Schema.define do
     t.timestamps
   end
   
+  create_table :parts, :force => true do |t|
+    t.references :good
+    t.string :name
+  end
+  
   create_table :property_templates, :force => true do |t|
     t.string :name
   end
@@ -12,6 +17,7 @@ ActiveRecord::Schema.define do
   create_table :properties, :force => true do |t|
     t.references :property_template
     t.references :good
+    t.references :part
     t.string :value
   end
 
