@@ -28,4 +28,12 @@ class HasPropertiesTest < Test::Unit::TestCase
     item = Item.create! :template_1 => '42'
     assert_equal '42', item.properties.find_by_template_id(1).value
   end
+  
+  test "template scope can be provided by user" do
+    ScopedTemplate.create! :id => 1, :name => 'template to be included in set'
+    ScopedTemplate.create! :id => 2, :name => 'template to be excluded from set', :is_needed => false
+    item = ScopedItem.create!
+    assert_equal true, item.respond_to?(:scoped_template_1)
+    assert_equal false, item.respond_to?(:scoped_template_2)
+  end
 end

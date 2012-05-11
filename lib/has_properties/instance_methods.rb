@@ -16,9 +16,16 @@ module HasProperties
         options[:template].constantize.find_by_id(match[1]) if match[1].to_i.in?(allowed_properties.map(&:id))
       end
 
+      def self.completed_filter(finder_obj)
+          unless finder_obj.is_a?(ActiveRecord::Relation)
+            raise ArgumentError, "An ActiveRecord::Relation object is required"
+          end
+          finder_obj.all.select { |r| r.completed? }
+        end
+        
       def allowed_properties
-        #FIXME: additional filters needed
-        options[:template].constantize.all
+        properties = options[:template].constantize.scoped
+        (options[:template_scope].is_a?(Symbol) ? properties.public_send(options[:template_scope]) : properties).all
       end
 
       def method_missing(method, *args)
