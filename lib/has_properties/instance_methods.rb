@@ -22,7 +22,7 @@ module HasProperties
           properties = properties.public_send(options[:template_scope])
         elsif options[:template_scope].is_a?(Hash)
           options[:template_scope].each do |scope, attr_func|
-            properties = properties.public_send(scope, *self.public_send(attr_func))
+            attr_func.is_a?(Symbol) ? properties = properties.public_send(scope, *self.public_send(attr_func)) : properties.public_send(scope)
           end
         end
         properties.all
