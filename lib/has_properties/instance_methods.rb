@@ -18,14 +18,19 @@ module HasProperties
 
       def allowed_properties
         properties = options[:template].constantize.scoped
+        properties_arr = Array.new()
         if options[:template_scope].is_a?(Symbol)
           properties = properties.public_send(options[:template_scope])
         elsif options[:template_scope].is_a?(Hash)
           options[:template_scope].each do |scope, attr_func|
-            attr_func.is_a?(Symbol) ? properties = properties.public_send(scope, *self.public_send(attr_func)) : properties.public_send(scope)
+            if attr_func.is_a?(Symbol) 
+              properties_arr << properties.public_send(scope, *self.public_send(attr_func))
+            else
+              properties.public_send(scope)
+            end
           end
         end
-        properties.all
+        return (properties_arr.empty? ? properties.all : properties_arr.flatten!)
       end
       
       def find_or_initialize_call(template_id)
