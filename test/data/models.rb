@@ -33,7 +33,7 @@ class Item < ActiveRecord::Base
 end
 
 class ScopedTemplate < ActiveRecord::Base
-  scope :scope_name, where(:is_needed => true)
+  scope :scope_name, lambda{|first,second| where(:is_needed => true)}
   
   def self.actual?(value)
     !value.blank?
@@ -44,6 +44,10 @@ class ScopedProperty < ActiveRecord::Base
 end
 
 class ScopedItem < ActiveRecord::Base
-  has_properties :scoped_properties, :template => :scoped_template, :template_scope => :scope_name
+  has_properties :scoped_properties, :template => :scoped_template, :template_scope => {:scope_name => :get_scope_attribute}
+  
+  def get_scope_attribute
+    [1, 2]
+  end
 end
 

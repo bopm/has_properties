@@ -18,13 +18,20 @@ module HasProperties
 
       def allowed_properties
         properties = options[:template].constantize.scoped
-        (options[:template_scope].is_a?(Symbol) ? properties.public_send(options[:template_scope]) : properties).all
+        if options[:template_scope].is_a?(Symbol)
+          properties = properties.public_send(options[:template_scope])
+        elsif options[:template_scope].is_a?(Hash)
+          options[:template_scope].each do |scope, attr_func|
+            properties = properties.public_send(scope, *self.public_send(attr_func))
+          end
+        end
+        properties.all
       end
       
       def find_or_initialize_call(template_id)
         name = "find_or_initialize_by_#{options[:template_fk]}"
         params = [template_id]
-        if options[:through].is_a? Symbol
+        if options[:through].is_a?(Symbol)
           fk = options[:through].to_s.foreign_key
           name += "_and_#{self.class.name.foreign_key}_and_#{fk}"
           params += [self.id, self.send(fk.to_sym)]
