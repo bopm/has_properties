@@ -17,7 +17,6 @@ module HasProperties
       end
 
       def allowed_properties
-        logger.info options.inspect
         properties = options[:template].constantize.scoped
         properties_arr = Array.new()
         if options[:template_scope].is_a?(Symbol)
@@ -68,8 +67,7 @@ module HasProperties
 
       def mass_assignment_authorizer(role = :default)
         attrs = super
-        attrs += (templates_name_list || []) unless self.new_record?
-        logger.info attrs.inspect
+        attrs += (templates_name_list || [])
         attrs
       end
   end
