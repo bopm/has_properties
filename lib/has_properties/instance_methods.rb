@@ -3,7 +3,6 @@ module HasProperties
     extend ActiveSupport::Concern
     
     def respond_to?(method, include_private=false)
-      puts method
       if safe_template_id(method).nil?
         super
       else
@@ -13,7 +12,6 @@ module HasProperties
 
     private
       def safe_template_id(method)
-        return nil unless options.is_a? Array
         return nil unless (match = /^#{Regexp.quote(options[:template].underscore)}_(\d+)/.match(method))
         options[:template].constantize.find_by_id(match[1]) if match[1].to_i.in?(allowed_properties.map(&:id))
       end
