@@ -30,6 +30,7 @@ module HasProperties
             end
           end
         end
+        logger.info properties_arr.inspect
         return (properties_arr.empty? ? properties.all : properties_arr.uniq.flatten)
       end
       
