@@ -68,6 +68,7 @@ module HasProperties
       def mass_assignment_authorizer(role = :default)
         attrs = super
         attrs += (templates_name_list || []) unless self.new_record?
+        logger.info attrs.inspect if logger
         attrs
       end
   end
