@@ -50,7 +50,7 @@ module HasProperties
         property = self.properties.send(finder, *params)
         if method.to_s =~ /(.+)=$/
           # setter
-          if options[:template].constantize.actual?(args.first)
+          if options[:template].constantize.new.actual?(args.first)
             property.update_attribute(:value, args.first)
           else
             property.destroy
