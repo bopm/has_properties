@@ -62,7 +62,7 @@ module HasProperties
       end
       
       def templates_name_list
-        allowed_properties.map {|m| "#{options[:template]}_#{m.id}" }
+        allowed_properties.map {|m| "#{options[:template].downcase}_#{m.id}" }
       end
 
       def mass_assignment_authorizer(role = :default)
