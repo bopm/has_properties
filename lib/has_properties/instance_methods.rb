@@ -30,7 +30,7 @@ module HasProperties
             end
           end
         end
-        return (properties_arr.empty? ? properties.all : properties_arr.uniq.flatten!)
+        return (properties_arr.empty? ? properties.all : properties_arr.uniq.flatten)
       end
       
       def find_or_initialize_call(template_id)
@@ -68,7 +68,6 @@ module HasProperties
       def mass_assignment_authorizer(role = :default)
         attrs = super
         attrs += (templates_name_list || []) unless self.new_record?
-        logger.info attrs.inspect if logger
         attrs
       end
   end
