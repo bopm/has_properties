@@ -17,6 +17,7 @@ module HasProperties
       end
 
       def allowed_properties
+        logger.info options.inspect
         properties = options[:template].constantize.scoped
         properties_arr = Array.new()
         if options[:template_scope].is_a?(Symbol)
@@ -24,7 +25,6 @@ module HasProperties
         elsif options[:template_scope].is_a?(Hash)
           options[:template_scope].each do |scope, attr_func|
             if attr_func.is_a?(Symbol)
-              logger.info "!!!+!!!"
               properties_arr << properties.public_send(scope, *self.public_send(attr_func))
             else
               properties.public_send(scope)
