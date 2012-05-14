@@ -1,5 +1,5 @@
 class PropertyTemplate < ActiveRecord::Base
-  def self.actual?(value)
+  def actual?(value)
     !value.blank?
   end
 end
@@ -20,7 +20,7 @@ class Part < ActiveRecord::Base
 end
 
 class Template < ActiveRecord::Base
-  def self.actual?(value)
+  def actual?(value)
     !value.blank?
   end
 end
@@ -35,7 +35,7 @@ end
 class ScopedTemplate < ActiveRecord::Base
   scope :scope_name, lambda{|first,second| where(:is_needed => true)}
   
-  def self.actual?(value)
+  def actual?(value)
     !value.blank?
   end
 end
