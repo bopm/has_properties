@@ -30,7 +30,7 @@ module HasProperties
             end
           end
         end
-        return (properties_arr.empty? ? properties.all : properties_arr.flatten!)
+        return (properties_arr.empty? ? properties.all : properties_arr.uniq.flatten!)
       end
       
       def find_or_initialize_call(template_id)
