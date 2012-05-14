@@ -67,7 +67,7 @@ module HasProperties
 
       def mass_assignment_authorizer(role = :default)
         attrs = super
-        attrs += (self.templates_name_list || []) unless self.new_record?
+        attrs += (templates_name_list || []) unless self.new_record?
         attrs
       end
   end
