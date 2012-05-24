@@ -24,12 +24,7 @@ module HasProperties
         elsif options[:template_scope].is_a?(Hash)
           options[:template_scope].each do |scope, attr_func|
             if attr_func.is_a?(Symbol)
-              attr_func_args = self.public_send(attr_func)
-              if attr_func_args.is_a?(Array)
-                properties_arr << properties.public_send(scope, *attr_func_args)
-              else
-                properties_arr << properties.public_send(scope, attr_func_args)
-              end
+              properties_arr << properties.public_send(scope, *self.public_send(attr_func))
             else
               properties.public_send(scope)
             end
