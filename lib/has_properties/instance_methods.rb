@@ -25,7 +25,7 @@ module HasProperties
           options[:template_scope].each do |scope, attr_func|
             if attr_func.is_a?(Symbol)
               attr_func_args = self.public_send(attr_func)
-              logger.info attr_func_args
+              logger.info *attr_func_args
               properties_arr << properties.public_send(scope, *attr_func_args)
             else
               properties.public_send(scope)
