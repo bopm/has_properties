@@ -47,7 +47,7 @@ module HasProperties
       def method_missing(method, *args)
         super if (template = safe_template_id(method)).nil?
         finder, params = find_or_initialize_call(template.id)
-        logger.info "#{finder},#{params.inspect}"
+        puts "#{finder},#{params.inspect}"
         property = self.properties.send(finder, *params)
         if method.to_s =~ /(.+)=$/
           # setter
