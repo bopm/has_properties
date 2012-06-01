@@ -47,14 +47,13 @@ module HasProperties
       def method_missing(method, *args)
         super if (template = safe_template_id(method)).nil?
         finder, params = find_or_initialize_call(template.id)
-        puts "#{finder},#{params.inspect}"
         property = self.properties.send(finder, *params)
         if method.to_s =~ /(.+)=$/
           # setter
           if template.actual?(args.first)
             property.update_attribute(:value, args.first)
           else
-            property.destroy
+            property.destroy unless property.new_record?
           end
         else
           # getter
