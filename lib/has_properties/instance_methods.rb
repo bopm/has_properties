@@ -9,14 +9,22 @@ module HasProperties
         true
       end
     end
+    
+    def reset_properties
+      @allowed_properties = nil
+    end
 
     private
       def safe_template_id(method)
         return nil unless (match = /^#{Regexp.quote(options[:template].underscore)}_(\d+)/.match(method))
         options[:template].constantize.find_by_id(match[1]) if match[1].to_i.in?(allowed_properties.map(&:id))
       end
-
+      
       def allowed_properties
+        @allowed_properties ||= get_properties
+      end
+
+      def get_properties
         properties = options[:template].constantize.scoped
         properties_arr = Array.new()
         if options[:template_scope].is_a?(Symbol)
