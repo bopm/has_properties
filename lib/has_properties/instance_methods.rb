@@ -11,7 +11,7 @@ module HasProperties
     end
     
     def reset_properties
-      @allowed_properties = nil
+      @properties = nil
     end
 
     private
@@ -21,7 +21,7 @@ module HasProperties
       end
       
       def allowed_properties
-        @allowed_properties ||= get_properties
+        @properties ||= get_properties
       end
 
       def get_properties
