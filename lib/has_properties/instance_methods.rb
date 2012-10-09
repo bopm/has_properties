@@ -62,7 +62,7 @@ module HasProperties
           if template.actual?(args.first)
             property.update_attribute(:value, args.first)
           else
-            property.destroy
+            property.destroy unless property.new_record?
           end
         else
           # getter
