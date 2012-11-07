@@ -70,7 +70,7 @@ module HasProperties
           end
         else
           # getter
-          property ? property.value : template.default
+          property.nil? ? template.default : property.value
         end
       end
       
