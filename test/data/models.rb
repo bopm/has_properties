@@ -1,8 +1,4 @@
 class PropertyTemplate < ActiveRecord::Base
-  def default_value
-    ''
-  end
-  
   def actual?(value)
     !value.blank?
   end
