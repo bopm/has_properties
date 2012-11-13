@@ -28,7 +28,17 @@ class HasPropertiesTest < Test::Unit::TestCase
     item = Item.create! :template_1 => '42'
     assert_equal '42', item.properties.find_by_template_id(1).value
   end
-  
+
+  test "template option must save property" do
+    item = Item.create! :template_2_1 => '42'
+    assert_equal item.properties.find_by_template_id_and_template_option_id(2,1).value, '42'
+  end
+
+  test "template option must provide separate storage for value" do
+    item = Item.create! :template_2_1 => '42', :template_2_2 => '43'
+    assert_not_equal item.properties.find_by_template_id_and_template_option_id(2,1).value, item.properties.find_by_template_id_and_template_option_id(2,2).value
+  end
+
   test "template scope can be provided by user" do
     ScopedTemplate.create! :id => 1, :name => 'template to be included in set'
     ScopedTemplate.create! :id => 2, :name => 'template to be excluded from set', :is_needed => false
@@ -50,5 +60,4 @@ class HasPropertiesTest < Test::Unit::TestCase
     part.update_attribute(:property_template_1, '84')
     assert_equal part.id, part.properties.find_by_property_template_id_and_good_id_and_value(1, good.id, '84').part_id
   end
-  
 end

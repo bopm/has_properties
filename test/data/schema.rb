@@ -28,10 +28,16 @@ ActiveRecord::Schema.define do
   create_table :templates, :force => true do |t|
     t.string :name
   end
-  
-  create_table :props, :force => true do |t|
+
+  create_table :template_options, :force => true do |t|
     t.references :template
+    t.string :value
+  end
+
+  create_table :props, :force => true do |t|
     t.references :item
+    t.references :template
+    t.references :template_option
     t.string :value
   end
   

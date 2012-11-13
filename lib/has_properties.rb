@@ -14,6 +14,7 @@ module HasProperties
     self.options[:property_class] ||= self.options[:property].constantize.name
     self.options[:template] = ActiveSupport::Inflector.camelize(self.options[:template] || "#{self.options[:property]}_template").singularize
     self.options[:template_fk] ||= self.options[:template].constantize.name.foreign_key
+    self.options[:template_option_class] = self.options[:template_option].to_s.camelize.singularize.constantize.name if self.options[:template_option]
     has_many_options = {class_name: self.options[:property_class], dependent: :destroy}
     has_many_options[:through] = self.options[:through] if self.options[:through].is_a? Symbol
 

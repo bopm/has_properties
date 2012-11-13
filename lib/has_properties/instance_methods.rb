@@ -3,7 +3,8 @@ module HasProperties
     extend ActiveSupport::Concern
     
     def respond_to?(method, include_private=false)
-      if safe_template_id(method).nil?
+      template, option = safe_template_id(method)
+      if template.nil?
         super
       else
         true
@@ -16,8 +17,17 @@ module HasProperties
 
     private
       def safe_template_id(method)
-        return nil unless (match = /^#{Regexp.quote(options[:template].underscore)}_(\d+)/.match(method))
-        options[:template].constantize.find_by_id(match[1]) if match[1].to_i.in?(allowed_properties.map(&:id))
+        return nil, nil unless (match = /^#{Regexp.quote(options[:template].underscore)}_(\d+)_?(\d+)?/.match(method))
+        option = nil
+        guard = match[1].to_i.in?(allowed_properties.map(&:id))
+        if match[2]
+          guard = guard && (option = options[:template_option_class].constantize.send("find_by_id_and_#{options[:template_fk]}".to_sym, match[2], match[1]))
+        end
+        if guard
+          return options[:template].constantize.find_by_id(match[1]), option
+        else
+          return nil, nil
+        end
       end
       
       def allowed_properties
@@ -41,7 +51,7 @@ module HasProperties
         return (properties_arr.empty? ? properties.all : properties_arr.uniq.flatten)
       end
       
-      def find_or_initialize_call(template_id)
+      def find_or_initialize_call(template_id, option_id)
         name = "find_or_initialize_by_#{options[:template_fk]}"
         params = [template_id]
         if options[:through].is_a?(Symbol)
@@ -49,12 +59,17 @@ module HasProperties
           name += "_and_#{self.class.name.foreign_key}_and_#{fk}"
           params += [self.id, self.send(fk.to_sym)]
         end
+        if options[:template_option].is_a?(Symbol) and !option_id.nil?
+          name += "_and_#{self.options[:template_option_class].foreign_key}"
+          params += [option_id]
+        end
         return name.to_sym, params
       end
 
       def method_missing(method, *args)
-        super if (template = safe_template_id(method)).nil?
-        finder, params = find_or_initialize_call(template.id)
+        template, option = safe_template_id(method)
+        super if template.nil?
+        finder, params = find_or_initialize_call(template.id, option.try(:id))
         storage_object = self.options[:through].is_a?(Symbol) ? self.send(options[:through]).send(self.options[:properties]) : self.properties
         property = storage_object.send(finder, *params)
         if method.to_s =~ /(.+)=$/
@@ -71,7 +86,14 @@ module HasProperties
       end
       
       def templates_name_list
-        allowed_properties.map {|m| "#{options[:template].downcase}_#{m.id}" }
+        allowed_properties.map do |m|
+          ["#{options[:template].downcase}_#{m.id}",
+          if options[:template_option]
+            m.send(options[:template_option].to_sym).map {|o| "#{options[:template].downcase}_#{m.id}_#{o.id}"}
+          else
+            []
+          end]
+        end.flatten
       end
 
       def mass_assignment_authorizer(role = :default)

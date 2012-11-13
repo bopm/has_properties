@@ -18,6 +18,9 @@ class Test::Unit::TestCase
     PropertyTemplate.find_or_create_by_id_and_name(1,'test')
     PropertyTemplate.find_or_create_by_id_and_name(2,'test#2')
     Template.find_or_create_by_id_and_name(1,'test')
+    Template.find_or_create_by_id_and_name(2,'test option')
+    TemplateOption.find_or_create_by_id_and_template_id(1,2)
+    TemplateOption.find_or_create_by_id_and_template_id(2,2)
     DatabaseCleaner.start
   end
 

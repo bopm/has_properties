@@ -20,16 +20,22 @@ class Part < ActiveRecord::Base
 end
 
 class Template < ActiveRecord::Base
+  has_many :template_options
+
   def actual?(value)
     !value.blank?
   end
+end
+
+class TemplateOption < ActiveRecord::Base
+  belongs_to :template
 end
 
 class Prop < ActiveRecord::Base
 end
 
 class Item < ActiveRecord::Base
-  has_properties :props, :template => :templates
+  has_properties :props, :template => :templates, :template_option => :template_options
 end
 
 class ScopedTemplate < ActiveRecord::Base
